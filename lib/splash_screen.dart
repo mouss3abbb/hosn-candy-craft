@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
         const Duration(seconds: 3),(){
-          Get.off(()=>const Login(),transition: Transition.circularReveal);
+          Get.off(()=>Login(),transition: Transition.circularReveal);
     });
   }
 

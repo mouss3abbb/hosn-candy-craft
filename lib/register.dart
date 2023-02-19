@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hosn_candy_craft/main.dart';
 
 import 'home_screen.dart';
 
 class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
+  Register({Key? key}) : super(key: key);
 
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,9 +33,10 @@ class Register extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                 padding: const EdgeInsets.fromLTRB(12,0,12,0),
-                child: const TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: nameController,
+                  obscureText: false,
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       label: Text('Full name')
                   ),
@@ -38,9 +45,10 @@ class Register extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 padding: const EdgeInsets.fromLTRB(12,0,12,0),
-                child: const TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: emailController,
+                  obscureText: false,
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       label: Text('Email')
                   ),
@@ -49,11 +57,12 @@ class Register extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 padding: const EdgeInsets.fromLTRB(12,0,12,0),
-                child: const TextField(
+                child: TextField(
+                  controller: passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text('Password')
+                      label: Text('Password'),
                   ),
                 ),
               ),
@@ -61,6 +70,7 @@ class Register extends StatelessWidget {
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: ElevatedButton(
                   onPressed: () {
+                    register();
                     Get.offAll(()=>const Home(),transition: Transition.cupertino,duration: const Duration(milliseconds: 700));
                   },
                   style: const ButtonStyle(
@@ -80,5 +90,10 @@ class Register extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void register() async {
+    final usersBox = await Hive.openBox("users");
+    usersBox.put(emailController.text.trim(), [nameController.text.trimRight(),passwordController.text]);
   }
 }

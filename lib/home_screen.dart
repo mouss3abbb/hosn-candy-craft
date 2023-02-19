@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -10,7 +11,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var selectedIndex = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +77,15 @@ class _HomeState extends State<Home> {
 }
 
 
-List<PostImage> savedItems = [];
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
-
   @override
   State<CartPage> createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
+  final List<PostImage> savedItems = [];
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -94,6 +93,21 @@ class _CartPageState extends State<CartPage> {
       children: savedItems,
     );
   }
+}
+
+Future<List> getSavedItems() async{
+  final items = await Hive.openBox('items');
+  var result = [];
+  int index = 0;
+  while(true){
+    try{
+      if(items.getAt(index) == null)break;
+      result.add(items.getAt(index++));
+    } catch(e){
+      break;
+    }
+  }
+  return result;
 }
 
 
@@ -277,11 +291,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void saveItem(Image image) {
-    setState(() {
-      savedItems.add(
-        PostImage(image: image),
-      );
-    });
+
 
       Get.snackbar(
           "Saved item",
