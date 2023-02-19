@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ class _HomeState extends State<Home> {
 }
 
 
-
+List<PostImage> savedItems = [];
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -88,8 +89,9 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-
+    return ListView(
+      scrollDirection: Axis.vertical,
+      children: savedItems,
     );
   }
 }
@@ -121,6 +123,7 @@ class _HomePageState extends State<HomePage> {
                 fit: BoxFit.cover,
               ),
               ),
+              const SizedBox(width: 12,),
               PostImage(image: Image.asset(
                 "assets/images/hat.png",
                 fit: BoxFit.cover,
@@ -225,21 +228,40 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             scrollDirection: Axis.vertical,
             children: [
-              PostImage(image: Image.asset(
-                "assets/images/hat.png",
-                fit: BoxFit.cover,
-              ),
+              GestureDetector(
+                onDoubleTap: ()=>saveItem(Image.asset(
+                  "assets/images/hat.png",
+                  fit: BoxFit.cover,
+                )),
+                child: PostImage(image: Image.asset(
+                  "assets/images/hat.png",
+                  fit: BoxFit.cover,
+                ),
+                ),
               ),
               const SizedBox(height: 24,),
-              PostImage(image: Image.asset(
-                "assets/images/header1.png",
-                fit: BoxFit.cover,
+              GestureDetector(
+                onDoubleTap: ()=>saveItem(Image.asset(
+                  "assets/images/header1.png",
+                  fit: BoxFit.cover,
+                )),
+                child: PostImage(image: Image.asset(
+                  "assets/images/header1.png",
+                  fit: BoxFit.cover,
+                ),
+                ),
               ),
-              ),
-              PostImage(image: Image.asset(
-                "assets/images/hat.png",
-                fit: BoxFit.cover,
-              ),
+              const SizedBox(height: 24,),
+              GestureDetector(
+                onDoubleTap: ()=>saveItem(Image.asset(
+                  "assets/images/hat.png",
+                  fit: BoxFit.cover,
+                )),
+                child: PostImage(image: Image.asset(
+                  "assets/images/hat.png",
+                  fit: BoxFit.cover,
+                ),
+                ),
               ),
               const SizedBox(height: 24,),
               PostImage(image: Image.asset(
@@ -252,6 +274,22 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  void saveItem(Image image) {
+    setState(() {
+      savedItems.add(
+        PostImage(image: image),
+      );
+    });
+
+      Get.snackbar(
+          "Saved item",
+          "Item added to cart successfully",
+          isDismissible: true,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 1),
+      );
   }
 }
 
@@ -270,7 +308,10 @@ class PostImage extends StatelessWidget {
       panEnabled: false,
       minScale: 0.5,
       maxScale: 2,
-      child: image,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,8.0),
+        child: image,
+      ),
     );
   }
 }
